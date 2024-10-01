@@ -1,4 +1,4 @@
-#🪻🪼 ECON 326 GROUP PROJECT 🪼🪻
+# 🪻🪼 ECON 326 GROUP PROJECT 🪼🪻
 
 This is the repository for our group project. **Meetings are every tuesday, 6-7 PM during the tutorial.**
 
