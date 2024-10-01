@@ -6,3 +6,6 @@ To clone this repository and to make contributions, create a GH account, install
 
 [Useful guides for all things git-related](https://docs.github.com/en/get-started/start-your-journey/git-and-github-learning-resources)
 
+### ⚠️ IMPORTANT: CREATE A BRANCH! ⚠️
+
+If editing the main project files, **DO NOT PUSH TO MAIN. Create a new branch, make changes there, then merge the branch after clearing merge conflicts. This will make merge conflicts significantly easier to handle.** `main` is currently unprotected. If we are frequently getting merge conflicts, I will protect it. 
