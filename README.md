@@ -5,6 +5,10 @@ This is the repository for our group project. **Meetings are every tuesday, 6-7 
 To clone this repository and to make contributions, create a GH account, install an IDE such as VSCode, Git, and GitHub desktop. Follow the setup instructions for each one. Finally, *clone* the repo using `https://github.com/Irene-Berezin/econ326.git`.
 
 [Useful guides for all things git-related](https://docs.github.com/en/get-started/start-your-journey/git-and-github-learning-resources)
+### Files
+
+- **transit_data.ipynb**: This notebook contains the code for indexing public transit data.
+- **transit_index.ipynb**: This notebook provides visualizations for public transit points.
 
 ### ⚠️ IMPORTANT: AVOIDING MERGE CONFLICTS! ⚠️
 
