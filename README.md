@@ -8,7 +8,7 @@ To clone this repository and to make contributions, create a GH account, install
 ### Files
 
 - **transit_data.ipynb**: This notebook contains the code for indexing public transit data.
-- **transit_index.ipynb**: This notebook provides visualizations for public transit points.
+- **transit_index.ipynb**: This notebook provides visualizations for public transit points (stops).
 
 ### ⚠️ IMPORTANT: AVOIDING MERGE CONFLICTS! ⚠️
 
