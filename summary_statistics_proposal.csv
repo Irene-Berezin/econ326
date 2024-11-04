@@ -1,0 +1,10 @@
+"","data","mean","standard_dev","max","min"
+"1","crime_data",464.88,856.97,15000,13.91
+"2","light_index",2.92,0.8,8.03,0.29
+"3","bus_stop_index",3.79,0.9,8.13,0.99
+"4","school_index",2.62,0.81,7.91,0
+"5","cultural_centre_index",2.23,0.96,7.56,0
+"6","land_value_in_millions",1.39,5.15,590.2,0
+"7","avg_income",73021.26,24782.99,213504,12704
+"8","prop_bachelors_or_more",0.42,0.15,0.88,0.08
+"9","prop_immigrant",0.34,0.14,0.66,0
