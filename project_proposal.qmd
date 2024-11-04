@@ -1,0 +1,205 @@
+---
+format: 
+  html: default
+  ipynb:
+    jupyter:
+      kernelspec:
+        display_name: R
+        language: r
+        name: ir
+---
+
+## 
+
+
+# Final Proposal outline: Analyzing Infrastructure's affect on Theft and Robbery in Vancouver
+
+#### Advanced Track: Irene Berezin, Kaiyan Zhang, Niko Bauer, Jerrold Huang
+
+
+## Literature review
+
+The relationship between urban infrastructure elements such as but not limited to access to public transport, cultural spaces, education, street lighting, and the crime rate has long been a topic of academic research amongst sociologists and economists. Studies have shown that urban infrastructure can influence crime through mechanisms like social cohesion, surveillance, and environmental design (Cozens et Al., (2005), Lee et Al, (2016)). 
+
+It is a well studied economic phenomenon that education is a critical factor in crime prevention. Higher levels of education are associated with higher lifetime income and a decrease in the likeliness to commit crimes, as education fosters lifelong interpersonal skills and decreases anti-social behavior (Carr et Al (2023), Boessen et Al, (2023)). 
+
+Depending on the circumstances, public transport can both contribute to and mitigate crime. Ceccato et Al. conducted an extensive literature review demonstrating that the social environments of high quality surrounding public transit may lead to decreases in crime (2022). Additionally Ridgeway and Macdonald found that the creation of public transport systems in los Angeles led to no impact and even a slight reduction in crime due to greater economic development (2017). 
+
+Improved street lighting is widely considered to be an effective method of crime reduction. A literature review by Welsh et Al. (2024), found that street lighting was associated with a 14% reduction in crime, and a study by Chalfin et Al. (2022) found that NYC communities with lots of street lighting had a decline in arrests and crimes compared to neighborhoods with poor street lighting. 
+
+Lastly, we note a research gap in whether or not cultural spaces lead to decreases in crime. Neto and Al. have shown that public libraries may lead to decreases in the crime rate in surrounding areas (2023), however few studies have looked beyond this point. 
+
+
+## Research statement
+
+In recent years, the city of Vancouver has experienced continued growth, fueled by rising urbanization and immigration rates. As the housing market expands and economic productivity rises by approximately 2.8% (Economic Snapshot), Vancouver continues to prosper. However, this growth has come with challenges. Violent crime rates have surged by roughly 12% over the past couple of years (Vancouver's 2023 Crime Trends), highlighting that expansion alone does not guarantee citizens’ sense of security. This raises an essential question: as Vancouver grows, how can the city ensure the safety of its citizens? Moreover, how can the city continue channelling resources toward housing and infrastructure while ensuring its residents' safety? 
+
+Research suggests that targeted infrastructure policies can effectively reduce crime rates. Yet, among a wide range of options, which interventions are the most effective? This is the question our project aims to answer. In our research paper, we wish to analyze **how the creation of infrastructure projects such as public transit, schooling, public street lights and cultural centres contribute to the reduction of vancouver's intentional crime rate - within specific areas.** We focus specifically on a subcategory of intentional crime, **theft**, which includes petty theft, breaking and entering, and car/bicycle theft, using VPD crime data between 2013 and 2019. Moreover, we aim to isolate the individual impact of these policies to identify the most effective guidelines for the city to implement. Ultimately providing data-driven, cost-effective solutions that deter crime while enabling a continued focus on expansion and infrastructure development.
+
+
+
+## Variables / Data Description
+
+Our variables come from the Canadian Census and the Vancouver open data API. See appendix A for references. 
+
+### Control Variables
+
+**Average property price:**
+
+The increase in the value of housing in an area plays a large role in affecting the premeditative crime rate. Therefore, we add this variable as a control so that we may better examine the effects of our other variables on the crime rate. The average property price comes from the 2016 Canadian property report under `current land value`, and is denoted as `land_value_in_millions` in the summary statistics table. It's units are in millions of Canadian Dollars. We performed no additional manipulation to this variable.
+
+
+**Average education level:**
+
+Average education has a significant effect on crime levels within an area. Therefore, we include this variable in our model to control for its effects and isolate how infrastructure impacts crime within an area. We define the average education level of a census area as the proportion of people with a bachelors degree or greater (any post-bachelors degree). This data comes from the Canadian Census under `v_CA16_5078: University certificate, diploma or degree at bachelor level or above`. Education level is denoted as `prop_bachelors_or_more` in the summary statistics table.
+
+![](images/education_map.svg)
+
+**Proportion of immigrants:**
+
+The proportion of immigrants can highlight diverse socio-economic dynamics in a neighborhood, influencing crime rates based on religious and cultural conflict. Therefore, we include this variable as a control to ensure that we are not capturing cross-cultural effects that are impacting crime rates. The proportion of immigrants comes from the Canadian census under `v_CA16_3411: Immigrants` and is represented in our variable as the proportion of immigrants living in a census area. It is denoted as `prop_immigrant` in the summary statistics table.
+
+![](images/immigrant_map.svg)
+
+**Average Income:**
+We use this variable to control for the effects of income within an area on crime rates. When studying infrastructure, we want to remove the impact of this variable on our outcome variable. We keep this variable alongside our average property value variable because it accounts for building value discrepancies. Moreover, massive apartments filled with lower-middle-class workers find themselves in apartment complexes worth millions of dollars. Having both will allow us to account for these parameters in our model. Average income comes from the Canadian Census under `v_CA16_2397: Median total income of households in 2015 ($)`. Specifically, we look at household income, as individual income ins't available in the canadian census API. We divide household income by 100k to make our variable's units 100k CAD. It is denoted `avg_income` in the summary statistics table.
+
+![](images/income_map.svg)
+
+### Variables of Interest
+
+#### Computation of Coverage and Accessibility Index (CA index)
+
+Recall that we define the presence of infrastructure, for the purposes of our model as the access to schooling, cultural centres, street lighting, and public transit. We define a function that translate the geographical presence of cultural centres, bus stops, etc relative to each census area into a numerical index.
+
+To understand how the coverage and accessability of a public services and infrastructure (public transit stops, schools, street light e.g.) we created an **CA index** for each sub-areas in Vancouver. This CA index helps us see how public infrastructure might relate to theft and robbery rates. Here’s how we broke it down:
+
+- **Average Distance to Points of Interest:** We calculated the average distance from the center of each sub-area to all nearby points of interest. This gives us an idea of accessability.
+
+- **Points of Interest Density:** We measured how many points of interest are packed into each sub-area. A higher density means more services and higher coverage, which could help deter crime.
+
+- **Points per 10,000 Population:** We looked at the number of points of interest relative to the population size. This ensures that accessibility and coverage is fair and considers how many people in the sub-area.
+
+By combining these factors into a single index, we can include accessibility and coverage in our regression model to see how different public infrastructures and services affect theft and robbery rates across different areas of Vancouver.
+
+**Proximity to cultural centers:**
+One of the first variables under consideration is how proximity to cultural centers affects crime rates when accounting for other variables in our model. Noting the previously-mentioned research gap, we hypothesize that access to cultural centres may decrease anti-social behavior and foster cooperation amongst residents. This data comes from the Vancouver open data portal. We convert the distance to cultural centres into a numerical index using the function outlined above. 
+
+![](images/culture_index_map.svg)
+
+**Luminosity:**
+Luminosity fits nicely into our model as it is an actionable guideline that can be introduced into infrastructure policy. We use luminosity as a variable to assess the impact of street lighting on crime rates, as studies have show that light levels may deter crime by increasing visibility. We hypothesize that streets in vancouver with greater lighting see reductions in the crime rate. This data comes from the Vancouver open data portal. We convert the distance to light posts into a numerical index using the function outlined above. 
+
+![](images/light_index_map.svg)
+
+**Public transit:**
+Access to public transit can significantly impact crime rates within a neighbourhood. Areas with robust public transit systems often see greater economic and police activity, potentially leading to a reduction in crimes. We hypothesize that at some point, we see diminishing and even negatively associated results with public transit and crime rates: ie, that initial access to public transit leads to an improvement in the crime rate, but additional access to public transport leads to criminal activity, as outlined in the literature review. Thus, it will be our model's job to reflect that in our analysis. This data comes from the Vancouver open data portal. We convert the distance to public transit into a numerical index using the function outlined above. 
+
+![](images/bus_index_map.svg)
+
+**Access to education:**
+Access to education is another variable that can impact crime rates. We hypothesize that areas with a robust public school system where parents have a plethora of schools to choose from result in greater social behavior and a decrease in the crime rate in surrounding areas. Specifically, we focus on primary and secondary education, the data for which is taken from the Vancouver open data portal. We convert the distance to schools into a numerical index using the function outlined above. 
+
+![](images/schools_index_map.svg)
+
+
+
+## Summary statistics 
+
+```{r}
+options(scipen = 999)
+
+library(tidyverse)
+
+sum_stat <- read_csv('summary_statistics_proposal.csv')
+sum_stat <- sum_stat|>
+distinct()
+
+sum_stat
+```
+
+## Regression model
+
+We begin by creating a regression model designed to analyze our control variables:
+ 
+$$
+\text{Intentional\_Crime\_Rate}_i = \beta_0 + \beta_1 (\text{Property\_Price}_i) + 
+\beta_2 (\text{Education\ Level}_i) + \beta_3 (\text{Immigrant\ Proportion}_i) + \beta_4 (\text{Income\ Bracket}_i) + \beta_5 (X) + \varepsilon_i
+$$
+
+
+Where X represents:
+- Luminosity 
+- Distinct to cultural centers 
+- Public transit density 
+
+This will allow us to measure the individual contribution of each of our infrastructure variables to understand their effect when holding socioeconomic forces constant. 
+
+### Full Model 
+
+Next, we want to see if the contribution of specific variables like light is significant when factoring in other infrastructure metrics. Does luminosity in itself reduce crime? Or do we find that high luminosity correlates with public transit and cultural centers, thus having a very low individual effect?
+
+$$
+\text{Intentional\_Crime\_Rate}_i = \beta_0 + \beta_1 (\text{Property\_Price}_i) + \beta_2 (\text{Education\_Level}_i) + \beta_3 (\text{Immigrant\_Proportion}_i) + \beta_4 (\text{Income\_Bracket}_i) + \beta_5 (\text{Luminosity}_i) + \beta_6 (\text{Proximity\_to\_Cultural\_Centers}_i) + \beta_7 (\text{Public\_Transit\_Density}_i) + \varepsilon_i
+$$
+
+
+### Interaction terms 
+
+With a goal of providing effective solutions for policymakers, we want to run interactive models to understand if the contribution of luminosity is only felt in areas where there is high foot traffic due to public transit or cultural centers. 
+
+$$
+\text{Intentional\_Crime\_Rate}_i = \beta_0 + \beta_1 (\text{Property\_Price}_i) + \beta_2 (\text{Education\_Level}_i) + \beta_3 (\text{Immigrant\_Proportion}_i) + \beta_4 (\text{Income\_Bracket}_i) + \beta_5 (\text{Luminosity}_i) + \beta_6 (\text{Proximity\_to\_Cultural\_Centers}_i) + \beta_7 (\text{Public\_Transit\_Density}_i) + \beta_8 (\text{Luminosity}_i \times \text{Proximity\_to\_Cultural\_Centers}_i) + \beta_9 (\text{Luminosity}_i \times \text{Public\_Transit\_Density}_i) + \epsilon_i
+$$
+
+
+Thus, if  $\beta_8$​ or $\beta_9$ ​ is significant, it suggests that luminosity’s effect on crime is not uniform but rather depends on proximity to cultural centers or the density of public transit respectively.
+Identifying potential non-linearity in our model 
+Research shows that increasing foot traffic due to cultural centers and public transit might reduce crime but eventually increase petty crime rates. Additionally, common sense points out that light posts and their luminous effect would prescribe diminishing marginal returns to impact crime. Therefore, with an attempt to capture these non-linear relations in our model, we would further like to run a regression such as 
+
+$$
+\text{Intentional\_Crime\_Rate}_i = \beta_0 + \beta_1 (\text{Property\_Price}_i) + \beta_2 (\text{Education\_Level}_i) + \beta_3 (\text{Immigrant\_Proportion}_i) + \beta_4 (\text{Income\_Bracket}_i) + \beta_5 (\text{Luminosity}_i) + \beta_6 (\text{Luminosity}_i^2) + \beta_7 (\text{Proximity\_to\_Cultural\_Centers}_i) + \beta_8 (\text{Proximity\_to\_Cultural\_Centers}_i^2) + \beta_9 (\text{Public\_Transit\_Density}_i) + \beta_{10} (\text{Public\_Transit\_Density}_i^2) + \epsilon_i
+$$
+
+
+Where...
+
+$\beta_6​(\text{Luminosity}_i^2​)$:  captures the (quadratic) effect of luminosity. If $\beta_6$​ is negative, it suggests diminishing returns; the crime reduction becomes less pronounced as luminosity increases.
+
+$\beta_8​(\text{Proximity\_to\_Cultural\_Centers}_i^2​)$: Captures the quadratic effect of proximity to cultural centers. A positive \beta_8​ indicates a U-shaped relationship, where proximity initially reduces crime but eventually correlates with an increase.
+
+$\beta_{10}(\text{Public\_Transit\_Density}_i^2)$: Represents the quadratic effect of public transit density. A positive $\beta_{10}$​ suggests that higher density initially reduces crime but, past a certain threshold, may lead to increased petty crime rates.
+
+With $\beta_{10}$ and $\beta_8$, we would expect them to be positive with a negative $\beta_{7}$ and $\beta_{9}$, respectively.  This would imply that after as significant turning point, the additional contribution of cultural centers and public transit density leads to increased crime rather than decreased crime. 
+
+We could estimate this turning point by calculating $\frac{\beta_9}{\beta_{10}}$ and $\frac{\beta_7}{\beta_8}$ to get a value for which the density of cultural centers measured by proximity starts to increase crime rates rather than decrease them. Following the above regressions should give us clear data on the relevant effects of each of our variables and allow our team to create policy recommendations for the city of Vancouver based on our results.  
+
+
+## References 
+
+- Amir, Nowicki, J., & Shakya, S. (2023). Do public libraries help mitigate crime? Evidence from Kansas City, MO. Journal of Cultural Economics. https://doi.org/10.1007/s10824-023-09497-4
+
+- Boessen, A., Omori, M., & Greene, C. (2021). Long-Term Dynamics of Neighborhoods and Crime: The Role of Education Over 40 Years. Journal of Quantitative Criminology. https://doi.org/10.1007/s10940-021-09528-3
+
+- Ceccato, V., Gaudelet, N., & Graf, G. (2022). Crime and safety in transit environments: A systematic review of the english and the french literature, 1970–2020. Public Transport, 14, 105–153. https://doi.org/10.1007/s12469-021-00265-1
+
+- Chalfin, A., Hansen, B., Lerner, J., & Parker, L. (2021). Reducing Crime Through Environmental Design: Evidence from a Randomized Experiment of Street Lighting in New York City. Journal of Quantitative Criminology, 38. https://doi.org/10.1007/s10940-020-09490-6
+
+- City of Vancouver. (2020). Property tax report. Vancouver.ca. https://opendata.vancouver.ca/explore/dataset/property-tax-report/information/City of Vancouver. (2024). Public art. Vancouver.ca. https://opendata.vancouver.ca/explore/dataset/public-art/table/
+
+- Cozens, P. M., Saville, G., & Hillier, D. (2005). Crime prevention through environmental design (CPTED): a review and modern bibliography. Property Management, 23(5), 328–356. https://doi.org/10.1108/02637470510631483
+
+- Crodelle, J., Vallejo, C., Schmidtchen, M., Topaz, C. M., & D’Orsogna, M. R. (2021). Impacts of California Proposition 47 on crime in Santa Monica, California. PLOS ONE, 16(5), e0251199. https://doi.org/10.1371/journal.pone.0251199
+
+- Lee, J., Park, S., & Jung, S. (2016). Effect of Crime Prevention through Environmental Design (CPTED) Measures on Active Living and Fear of Crime. Sustainability, 8(9), 872. https://doi.org/10.3390/su8090872O
+
+- kasu, W. (n.d.). Crime in Vancouver. Www.kaggle.com. https://www.kaggle.com/datasets/wosaku/crime-in-vancouver
+
+- Ridgeway, G., & MacDonald, J. M. (2016). Effect of Rail Transit on Crime: A Study of Los Angeles from 1988 to 2014. Journal of Quantitative Criminology, 33(2), 277–291. https://doi.org/10.1007/s10940-016-9296-7
+
+- Statistics Canada. (2016). Census Profile, 2016 Census. Statcan.gc.ca. https://www12.statcan.gc.ca/census-recensement/2016/dp-pd/prof/index.cfm?Lang=E
+
+- Translink. (2024). General Transit Feed Specification (GTFS). Translink.ca. https://www.translink.ca/about-us/doing-business-with-translink/app-developer-resources/gtfs
+
+- Welsh, B. C., Farrington, D. P., & Douglas, S. (2024). The Impact and Policy Relevance of Street Lighting for Crime Prevention:A Systematic Review Based on a Half-Century of Evaluation Research. CrimRxiv. https://doi.org/10.21428/cb6ab371.5b88b0f1
+
